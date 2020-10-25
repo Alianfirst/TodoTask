@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext, memo } from 'react';
 import clsx from 'clsx';
 import { makeStyles } from '@material-ui/core/styles';
 import Drawer from '@material-ui/core/Drawer';
@@ -16,61 +16,17 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormControl from '@material-ui/core/FormControl';
 import FormLabel from '@material-ui/core/FormLabel';
 
-import { FILTERED_KEYS, DRAWER_WIDTH } from '../variables';
+import { ValueContext } from '../context/value.context';
 
-const useStyles = makeStyles((theme) => ({
-	root: {
-		display: 'flex'
-	},
-	appBar: {
-		transition: theme.transitions.create([ 'margin', 'width' ], {
-			easing: theme.transitions.easing.sharp,
-			duration: theme.transitions.duration.leavingScreen
-		}),
-		height: '10vh',
-		backgroundColor: '#81c784'
-	},
-	appBarShift: {
-		width: `calc(100% - ${DRAWER_WIDTH}px)`,
-		marginLeft: DRAWER_WIDTH,
-		transition: theme.transitions.create([ 'margin', 'width' ], {
-			easing: theme.transitions.easing.easeOut,
-			duration: theme.transitions.duration.enteringScreen
-		})
-	},
-	menuButton: {
-		marginRight: theme.spacing(2)
-	},
-	hide: {
-		display: 'none'
-	},
-	drawer: {
-		width: DRAWER_WIDTH,
-		flexShrink: 0
-	},
-	drawerPaper: {
-		width: DRAWER_WIDTH
-	},
-	drawerHeader: {
-		display: 'flex',
-		alignItems: 'center',
-		padding: theme.spacing(0, 1),
-		// necessary for content to be below app bar
-		...theme.mixins.toolbar,
-		justifyContent: 'flex-end'
-	},
-	content: {
-		flexGrow: 1,
-		padding: theme.spacing(3),
-		transition: theme.transitions.create('margin', {
-			easing: theme.transitions.easing.sharp,
-			duration: theme.transitions.duration.leavingScreen
-		}),
-		marginTop: '2em'
-	}
-}));
+import { FILTERED_KEYS } from '../variables';
 
-const Navbar = ({ value, handleChange, open, toggle }) => {
+import styles from './styles/NavbarStyles';
+
+const useStyles = makeStyles(styles);
+
+const Navbar = ({ open, toggle }) => {
+	const { value, handleChange } = useContext(ValueContext);
+
 	const classes = useStyles();
 
 	return (
@@ -125,4 +81,4 @@ const Navbar = ({ value, handleChange, open, toggle }) => {
 	);
 };
 
-export default Navbar;
+export default memo(Navbar);

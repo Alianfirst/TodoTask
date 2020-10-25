@@ -9,42 +9,17 @@ import TodoForm from './TodoForm';
 import TodoList from './TodoList';
 import Navbar from './Navbar';
 
-import useTodoState from '../hooks/useTodoState';
 import useInputState from '../hooks/useInputState';
 import useToggleState from '../hooks/useToggleState';
 
-import { DRAWER_WIDTH } from '../variables';
+import { TodoProvider } from '../context/todo.context';
+import { ValueProvider } from '../context/value.context';
 
-const useStyles = makeStyles((theme) => ({
-	paper: {
-		margin: 0,
-		padding: 0,
-		height: '100vh'
-	},
-	appBar: {
-		height: '10vh',
-		backgroundColor: '#81c784'
-	},
-	grid: {
-		marginTop: '1rem'
-	},
-	gridShift: {
-		width: `calc(100% - ${DRAWER_WIDTH}px)`,
-		marginLeft: DRAWER_WIDTH,
-		transition: theme.transitions.create([ 'margin', 'width' ], {
-			easing: theme.transitions.easing.easeOut,
-			duration: theme.transitions.duration.enteringScreen
-		})
-	}
-}));
+import styles from './styles/AppStyles';
+
+const useStyles = makeStyles(styles);
 
 const App = () => {
-	const initialTodos = [
-		{ id: 1, task: 'Wash the car', completed: false },
-		{ id: 2, task: 'Wash the cat', completed: true }
-	];
-	const { todos, addTodo, editTodo, removeTodo, toggleTodo } = useTodoState(initialTodos);
-
 	const [ value, handleChange ] = useInputState('All');
 	const [ open, toggle ] = useToggleState(false);
 
@@ -53,25 +28,23 @@ const App = () => {
 	return (
 		<Paper className={classes.paper}>
 			<CssBaseline />
-			<Navbar value={value} handleChange={handleChange} open={open} toggle={toggle} />
-			<Grid
-				container
-				justify="center"
-				className={clsx(classes.grid, {
-					[classes.gridShift]: open
-				})}
-			>
-				<Grid item xs={11} md={8} lg={4}>
-					<TodoForm addTodo={addTodo} />
-					<TodoList
-						todos={todos}
-						removeTodo={removeTodo}
-						editTodo={editTodo}
-						toggleTodo={toggleTodo}
-						value={value}
-					/>
+			<ValueProvider>
+				<Navbar value={value} handleChange={handleChange} open={open} toggle={toggle} />
+				<Grid
+					container
+					justify="center"
+					className={clsx(classes.grid, {
+						[classes.gridShift]: open
+					})}
+				>
+					<Grid item xs={11} md={8} lg={4}>
+						<TodoProvider>
+							<TodoForm />
+							<TodoList value={value} />
+						</TodoProvider>
+					</Grid>
 				</Grid>
-			</Grid>
+			</ValueProvider>
 		</Paper>
 	);
 };

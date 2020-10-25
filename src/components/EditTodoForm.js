@@ -1,23 +1,27 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 
 import useInputState from '../hooks/useInputState';
 
-const useStyles = makeStyles({
-	editForm: {
-		width: '100%'
-	}
-});
+import { DispatchContext } from '../context/todo.context';
 
-const EditTodoForm = ({ id, task, editTodo, toggle }) => {
+import { EDIT_TODO } from '../reducers/types';
+
+import styles from './styles/EditTodoFormStyles';
+
+const useStyles = makeStyles(styles);
+
+const EditTodoForm = ({ id, task, toggle }) => {
+	const dispatch = useContext(DispatchContext);
+
 	const [ input, handleChange ] = useInputState(task);
 
 	const classes = useStyles();
 
 	const handleSubmit = (e) => {
 		e.preventDefault();
-		editTodo(id, input);
+		dispatch({ type: EDIT_TODO, newTask: input, id });
 		toggle();
 	};
 	return (
