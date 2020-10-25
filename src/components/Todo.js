@@ -1,4 +1,5 @@
-import React, { Fragment, useContext, memo } from 'react';
+import React, { Fragment, memo } from 'react';
+import { connect } from 'react-redux';
 import { makeStyles } from '@material-ui/core/styles';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItem';
@@ -11,26 +12,22 @@ import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import useToggleState from '../hooks/useToggleState';
 import EditTodoForm from './EditTodoForm';
 
-import { DispatchContext } from '../context/todo.context';
-
-import { TOGGLE_TODO, REMOVE_TODO } from '../reducers/types';
+import { toggleTodo, removeTodo } from '../actions';
 
 import styles from './styles/TodoStyles';
 
 const useStyles = makeStyles(styles);
 
-const Todo = ({ id, task, completed }) => {
-	const dispatch = useContext(DispatchContext);
-
+const Todo = ({ id, task, completed, removeTodo, toggleTodo }) => {
 	const [ isEdit, toggle ] = useToggleState(false);
 
 	const classes = useStyles();
 
 	const handleDelete = () => {
-		dispatch({ type: REMOVE_TODO, id });
+		removeTodo(id);
 	};
 	const handleToggle = () => {
-		dispatch({ type: TOGGLE_TODO, id });
+		toggleTodo(id);
 	};
 
 	const todoItem = isEdit ? (
@@ -49,6 +46,7 @@ const Todo = ({ id, task, completed }) => {
 			</ListItemSecondaryAction>
 		</Fragment>
 	);
+	console.log(id);
 	return (
 		<ListItem component="div" className={classes.item}>
 			{todoItem}
@@ -56,4 +54,12 @@ const Todo = ({ id, task, completed }) => {
 	);
 };
 
-export default memo(Todo);
+const mapStateToProps = (state, ownProps) => {
+	return {
+		id: ownProps.id,
+		task: ownProps.task,
+		completed: ownProps.completed
+	};
+};
+
+export default connect(mapStateToProps, { removeTodo, toggleTodo })(memo(Todo));

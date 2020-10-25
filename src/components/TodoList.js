@@ -1,4 +1,5 @@
 import React, { Fragment, useContext } from 'react';
+import { connect } from 'react-redux';
 import { makeStyles } from '@material-ui/core/styles';
 import { Paper, List } from '@material-ui/core';
 import Divider from '@material-ui/core/Divider';
@@ -6,7 +7,6 @@ import Typography from '@material-ui/core/Typography';
 
 import Todo from './Todo';
 
-import { TodoContext } from '../context/todo.context';
 import { ValueContext } from '../context/value.context';
 
 import { FILTERED_DATA } from '../variables';
@@ -15,8 +15,7 @@ import styles from './styles/TodoListStyles';
 
 const useStyles = makeStyles(styles);
 
-const TodoList = () => {
-	const todos = useContext(TodoContext);
+const TodoList = ({ todos }) => {
 	const { value } = useContext(ValueContext);
 	const classes = useStyles();
 	const todoList = todos.length ? (
@@ -38,4 +37,8 @@ const TodoList = () => {
 	return todoList;
 };
 
-export default TodoList;
+const mapStateToProps = (state) => {
+	return { todos: state.todos };
+};
+
+export default connect(mapStateToProps)(TodoList);

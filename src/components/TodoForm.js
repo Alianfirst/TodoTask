@@ -1,28 +1,25 @@
-import React, { useContext } from 'react';
+import React from 'react';
+import { connect } from 'react-redux';
 import { TextField } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 
 import useInputState from '../hooks/useInputState';
 
-import { DispatchContext } from '../context/todo.context';
-
-import { ADD_TODO } from '../reducers/types';
+import { addTodo } from '../actions';
 
 import styles from './styles/TodoFormStyles';
 
 const useStyles = makeStyles(styles);
 
-const TodoForm = () => {
-	const dispatch = useContext(DispatchContext);
-
+const TodoForm = ({ addTodo }) => {
 	const [ input, handleChange, reset ] = useInputState('');
 
 	const classes = useStyles();
 
 	const handleSubmit = (e) => {
 		e.preventDefault();
-		dispatch({ type: ADD_TODO, newTask: input });
+		addTodo(input);
 		reset();
 	};
 	return (
@@ -41,4 +38,4 @@ const TodoForm = () => {
 	);
 };
 
-export default TodoForm;
+export default connect(null, { addTodo })(TodoForm);

@@ -9,10 +9,8 @@ import TodoForm from './TodoForm';
 import TodoList from './TodoList';
 import Navbar from './Navbar';
 
-import useInputState from '../hooks/useInputState';
 import useToggleState from '../hooks/useToggleState';
 
-import { TodoProvider } from '../context/todo.context';
 import { ValueProvider } from '../context/value.context';
 
 import styles from './styles/AppStyles';
@@ -20,7 +18,6 @@ import styles from './styles/AppStyles';
 const useStyles = makeStyles(styles);
 
 const App = () => {
-	const [ value, handleChange ] = useInputState('All');
 	const [ open, toggle ] = useToggleState(false);
 
 	const classes = useStyles();
@@ -29,7 +26,7 @@ const App = () => {
 		<Paper className={classes.paper}>
 			<CssBaseline />
 			<ValueProvider>
-				<Navbar value={value} handleChange={handleChange} open={open} toggle={toggle} />
+				<Navbar open={open} toggle={toggle} />
 				<Grid
 					container
 					justify="center"
@@ -38,10 +35,8 @@ const App = () => {
 					})}
 				>
 					<Grid item xs={11} md={8} lg={4}>
-						<TodoProvider>
-							<TodoForm />
-							<TodoList value={value} />
-						</TodoProvider>
+						<TodoForm />
+						<TodoList />
 					</Grid>
 				</Grid>
 			</ValueProvider>
